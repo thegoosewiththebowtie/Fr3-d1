@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>Fr3_d1</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="PopUps\Splash.png" />
+    <None Update="Sounds\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="x.statement">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\icons\msoeres.dll_14_12.ico" />
+    <None Include="Resources\icons\msoeres.dll_14_19.ico" />
+    <None Include="Resources\icons\msoeres.dll_14_20.ico" />
+    <None Include="Resources\icons\progman.exe_14_128.ico" />
+    <None Include="Resources\icons\tags.ico" />
+    <None Update="Resources\icons\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="PopUps\Splash.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Config.Net" Version="5.2.0" />
+    <PackageReference Include="FluentFTP" Version="50.1.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="logo.bmp" />
+    <None Remove="Resources\W95font-Bold.ttf" />
+    <Resource Include="Resources\W95font-Bold.ttf" />
+    <None Remove="Resources\W95font-Regular.ttf" />
+    <Resource Include="Resources\W95font-Regular.ttf" />
+    <Resource Include="Resources\icons\**" />
+    <Resource Update="Resources\icons\logo.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="PopUps\howtouse.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

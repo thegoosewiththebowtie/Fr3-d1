@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="Primary">Blue</Color>
+    <Color x:Key="Secondary">SkyBlue</Color>
+    <Brush x:Key="Background">LightGray</Brush>
+    <Brush x:Key="Foreground">#DDDDDD</Brush>
+    <FontFamily x:Key="DefFont">pack://application:,,,/Resources/#W95font</FontFamily>
+</ResourceDictionary>

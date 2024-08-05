@@ -1,0 +1,220 @@
+﻿<Window x:Name='mainWin' x:Class="Fr3_d1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Fr3_d1"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" FontFamily="{StaticResource DefFont}"
+        ResizeMode="CanResize"
+        Title="Fr3-d1" MinWidth="800" MinHeight="450" Height="450" Width="800" WindowStyle='None'>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height='27'></RowDefinition>
+            <RowDefinition Height='25'></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid
+            Margin="1"
+           MouseLeftButtonDown='Grid_MouseLeftButtonDown'
+            Grid.Row='0'>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint='1,0.5' StartPoint='0,0.5'>
+                    <GradientStop Color='{StaticResource Secondary}'/>
+                    <GradientStop Color='{StaticResource Primary}' Offset='1'/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <StackPanel VerticalAlignment='Center' HorizontalAlignment='Left' Orientation='Horizontal'>
+                <Image Source='Resources/icons/eye.png' Margin="2,0,2,0" Width='25' Height='25'></Image>
+                <TextBlock FontFamily="{StaticResource DefFont}" FontStyle="Normal" Name="ttle" Foreground='Black' FontSize='20' Text='Fr3-d1 v.2.0.2 - Archive Worker Edition'></TextBlock>
+            </StackPanel>
+            <StackPanel HorizontalAlignment='Right' Orientation='Horizontal' >
+                <Button Click='collapse_Click' Margin='0, 2' x:Name='collapse' Width='21'>
+                    <TextBlock
+                        FontWeight='Bold'
+                        Padding='0,7,0,0'
+                        VerticalAlignment='Center'>
+                        —
+                    </TextBlock>
+                </Button>
+                <Button Click='fullsc_Click' Margin='0,2'  x:Name='fullsc' Width='21'>
+                    <TextBlock
+                        FontSize='15'
+                        Padding='0,0,0,3.5'
+                        VerticalAlignment='Center'>
+                        🗖
+                    </TextBlock>
+                </Button>
+                <Button Click='close_Click' Margin='2' x:Name='close' Width='21'>
+                    <TextBlock
+                        FontWeight='Bold'
+                        FontSize='11'
+                        Padding='0,0,0,2'
+                        VerticalAlignment='Center'>
+                        ╳
+                    </TextBlock>                    
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Menu
+            FontSize="14"
+            FontFamily="{StaticResource DefFont}" FontStyle="Normal"
+            Grid.Row='1' Grid.Column='0' x:Name='MainMenu'>
+            <MenuItem Header='File'>
+                <MenuItem  Click='clrDat_Click' x:Name='clrDat' Header='Clear database'></MenuItem>
+                <MenuItem  Click="Sync_OnClick" x:Name="sync" Header='Sync with The Web'></MenuItem>
+                <MenuItem IsEnabled="False" Header='Sync with Fr3-d1&#x0a;PDA companion'></MenuItem>
+                <Separator></Separator>
+                <MenuItem  Click="Login_OnClick" x:Name="login" Header='Log in'></MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="close_Click"  Header='Quit'></MenuItem>
+            </MenuItem>
+            <MenuItem Header='Edit'>
+                <MenuItem Click="newStatement_OnClick" Name="newStatement"  Header='Make a statement'></MenuItem>
+                <MenuItem IsEnabled="False" Header='Find'></MenuItem>
+            </MenuItem>
+            <MenuItem Header='View'>
+                <MenuItem IsEnabled="False" Header='Font size'>
+                    <Grid Width="80">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25"></ColumnDefinition>
+                            <ColumnDefinition Width="30"></ColumnDefinition>
+                            <ColumnDefinition Width="25"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Click="FontSmaller_OnClick" Name="FontSmaller" FontSize="20" HorizontalAlignment="Left" Grid.Column="0" Width="25">-</Button>
+                        <TextBox HorizontalAlignment="Stretch" Grid.Column="1" Width="30" IsReadOnly="True"></TextBox>
+                        <Button Click="FontBigger_OnClick" Name="FontBigger" FontSize="20" HorizontalAlignment="Right" Grid.Column="2" Width="25">+</Button>
+                    </Grid>
+                </MenuItem>
+                <MenuItem IsEnabled="False" Header='Page style'></MenuItem>
+                <MenuItem IsEnabled="False" Name="backgroundColor" Header='Background color'>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header='Statement'>
+                <MenuItem Header='Add a tag'>
+                    <MenuItem Click="MenuItem_OnClick" Header="Favorites"></MenuItem>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="Edit_OnClick" Name="Edit" Header='Edit'></MenuItem>
+                <MenuItem IsEnabled="False" Header='Add a supplemental'></MenuItem>
+                <MenuItem IsEnabled="False" Header='Delete'></MenuItem>
+            </MenuItem>
+            <MenuItem Header='Help'>
+                <MenuItem IsEnabled="False" Header='Support'></MenuItem>
+                <MenuItem Click="Howtouse_OnClick" Name="howtouse" Header='How to use'></MenuItem>
+                <MenuItem Click="Guidelines_OnClick" Name="Guideliness" Header='Guidelines'></MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="About_OnClick" Name="About" Header='About'></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid
+            Background='{StaticResource Background}'
+             Grid.Row='2'>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width='1*'></ColumnDefinition>
+                <ColumnDefinition Width='1*'></ColumnDefinition>
+                <ColumnDefinition Width='3*'></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TreeView
+                FontSize="16"
+                FontFamily="{StaticResource DefFont}" FontStyle="Normal"
+                Margin='3' Background='{StaticResource Foreground}'>
+                <TreeViewItem
+                    MouseLeftButtonDown="TreeViewItem_OnSelected">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/icons/tags.ico"></Image>
+                            <TextBlock Margin="2,0,0,0">Tags</TextBlock>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                    <TreeViewItem
+                        MouseLeftButtonDown="TreeViewItem_OnSelected"             
+                        Name="commontags">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Resources/icons/comtags.ico"></Image>
+                                <TextBlock Margin="2,0,0,0">Common tags</TextBlock>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem
+                        MouseLeftButtonDown="TreeViewItem_OnSelected"          
+                        Name="perstags">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Resources/icons/perstags.ico"></Image>
+                                <TextBlock Margin="2,0,0,0">Personal tags</TextBlock>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <TreeViewItem
+                            Selected="Favs_OnMouseLeftButtonDown"   
+                            Name="favs">
+                            <TreeViewItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="2,0,0,0">Favourites</TextBlock>
+                                </StackPanel>
+                            </TreeViewItem.Header>
+                        </TreeViewItem>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem Selected="Unmoderated_OnSelected" Visibility="Hidden" Name="Unmoderated" Header="Unmoderated"></TreeViewItem>
+                <TreeViewItem Selected="Moderated_OnSelected" Visibility="Hidden" Name="Moderated" Header="Moderated"></TreeViewItem>
+            </TreeView>
+            <TextBox
+                Background='{StaticResource Foreground}'
+                Margin='3'
+                Grid.Column='1'>
+            </TextBox>
+            <DataGrid
+                Name="StatementsListBox"
+                FontSize="16"
+                FontFamily="{StaticResource DefFont}" FontStyle="Normal"
+                Panel.ZIndex='1'
+                RowBackground="Transparent"
+                Background='Transparent'
+                Margin='4'
+                IsReadOnly="True"
+                SelectionMode="Single"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="False"
+                CanUserResizeRows="False"
+                AutoGenerateColumns="False"
+                SelectionChanged="StatementsListBox_OnSelectionChanged"
+                Grid.Column='1'>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Visibility="Hidden" Header="LocId" Binding="{Binding Path=LocId}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Visible" Header="Title" Binding="{Binding Path=Title}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Hidden" Header="Regarding" Binding="{Binding Path=Regarding}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Hidden" Header="StatementOf" Binding="{Binding Path=StatementOf}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Visible" Header="Given" Binding="{Binding Path=StatementGiven}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Visible" Header="Submitted" Binding="{Binding Path=StatementDigitized}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Hidden" Header="DigitizedBy" Binding="{Binding Path=DigitizedBy}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Hidden" Header="Tags" Binding="{Binding Path=Tags}"></DataGridTextColumn>
+                    <DataGridTextColumn Visibility="Hidden" Header="TheStatement" Binding="{Binding Path=TheStatement}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid Grid.Row="0" Margin="3" Grid.Column="2" MaxWidth="800" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.RowSpan="8">
+                <TextBox
+                    Margin='3'
+                    Background='{StaticResource Foreground}'
+                    Visibility='Visible'
+                    >
+                </TextBox>
+                <ScrollViewer
+                    Background="Transparent"
+                    Margin="3">
+                    <RichTextBox
+                        IsReadOnly="True"
+                        Name="statement"
+                        Background='Transparent'
+                        Visibility='Visible'
+                    >
+                    </RichTextBox>
+                </ScrollViewer>
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</Window>

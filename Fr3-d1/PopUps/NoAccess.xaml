@@ -1,0 +1,58 @@
+﻿<Window x:Class="Fr3_d1.PopUps.NoAccess"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Fr3_d1.PopUps"
+        mc:Ignorable="d" FontFamily="{StaticResource DefFont}"
+        Title="No Access" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height='27'></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Margin="1"
+              MouseLeftButtonDown='Grid_MouseLeftButtonDown'
+              Grid.Row='0'>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint='1,0.5' StartPoint='0,0.5'>
+                    <GradientStop Color='{StaticResource Secondary}'/>
+                    <GradientStop Color='{StaticResource Primary}' Offset='1'/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <StackPanel VerticalAlignment='Center' HorizontalAlignment='Left' Orientation='Horizontal'>
+                <Image Source='/Resources/icons/eye.png' Margin="2,0,2,0" Width='25' Height='25'></Image>
+                <TextBlock Name="title" Foreground='Black' FontSize='20' Text='Error' > </TextBlock>
+            </StackPanel>
+            <StackPanel HorizontalAlignment='Right' Orientation='Horizontal' >
+                <Button Click='close_Click' Margin='2' x:Name='close' Width='21'>
+                    <TextBlock
+                        FontWeight='Bold'
+                        FontSize='11'
+                        Padding='0,0,0,2'
+                        VerticalAlignment='Center'>
+                        ╳
+                    </TextBlock>                    
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row='1' ShowGridLines="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height='3*'></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Grid.Column="0" Source="../Resources/icons/noaccess.ico" VerticalAlignment="Top" Margin="15"></Image>
+            <TextBlock TextWrapping="Wrap" Grid.Row="0" Margin="0, 15, 0,0" Grid.Column="1">
+                You dont have an access to [thisaction]. If you believe that it is an error, please contact
+                The Head Archivist or The Archival Assistant. If you are just an Archive Worker you can send 
+                a suggestion to The Head Archivist.
+            </TextBlock>
+            <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="2" HorizontalAlignment="Left">Cancel</Button>
+            <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="2" HorizontalAlignment="Right">Make a suggestion</Button>
+        </Grid>
+    </Grid>
+</Window>
