@@ -913,7 +913,7 @@ namespace Fr3_d1
                     File.Delete("fup.ini");
                     if (MessageBox.Show("Update?", "Updates found", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        client.DownloadFile("triangleonthewall.org/fsetup.exe", "fsetup.exe");
+                        client.DownloadFile("https://triangleonthewall.org/fsetup.exe", "fsetup.exe");
                         Process.Start("fsetup.exe");
                         Application.Current.Shutdown();
                     }
