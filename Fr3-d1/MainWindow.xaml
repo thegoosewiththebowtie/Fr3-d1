@@ -96,8 +96,8 @@
                     <MenuItem Click="MenuItem_OnClick" Header="Favorites"></MenuItem>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem IsEnabled="False" Name="Accept" Header='Accept'></MenuItem>
-                <MenuItem IsEnabled="False" Name="Deny" Header='Deny'></MenuItem>
+                <MenuItem Click="Accept_OnClick" IsEnabled="False" Name="Accept" Header='Accept'></MenuItem>
+                <MenuItem Click="Deny_OnClick" IsEnabled="False" Name="Deny" Header='Deny'></MenuItem>
                 <Separator></Separator>
                 <MenuItem Click="Edit_OnClick" Name="Edit" Header='Edit'></MenuItem>
                 <MenuItem IsEnabled="False" Name="Suppl" Header='Add a supplemental'></MenuItem>
@@ -107,6 +107,8 @@
                 <MenuItem IsEnabled="False" Header='Support'></MenuItem>
                 <MenuItem Click="Howtouse_OnClick" Name="howtouse" Header='How to use'></MenuItem>
                 <MenuItem Click="Guidelines_OnClick" Name="Guideliness" Header='Guidelines'></MenuItem>
+                <Separator></Separator>
+                <MenuItem Click="Chk_OnClick" Name="chk" Header="Check for updates"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Click="About_OnClick" Name="About" Header='About'></MenuItem>
             </MenuItem>
@@ -125,7 +127,7 @@
                 Margin='3' Background='{StaticResource Foreground}'>
                 <TreeViewItem
                     Selected="selected2"
-                    MouseLeftButtonDown="TreeViewItem_OnSelected">
+                    PreviewMouseDown="TreeViewItem_OnSelected">
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/icons/tags.ico"></Image>
@@ -133,7 +135,7 @@
                         </StackPanel>
                     </TreeViewItem.Header>
                     <TreeViewItem
-                        MouseLeftButtonDown="TreeViewItem_OnSelected"             
+                        PreviewMouseDown="TreeViewItem_OnSelected"             
                         Name="commontags">
                         <TreeViewItem.Header>
                             <StackPanel Orientation="Horizontal">
@@ -143,7 +145,7 @@
                         </TreeViewItem.Header>
                     </TreeViewItem>
                     <TreeViewItem
-                        MouseLeftButtonDown="TreeViewItem_OnSelected"          
+                        PreviewMouseDown="TreeViewItem_OnSelected"          
                         Name="perstags">
                         <TreeViewItem.Header>
                             <StackPanel Orientation="Horizontal">

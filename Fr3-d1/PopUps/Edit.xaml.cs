@@ -12,10 +12,12 @@ public partial class Edit : Window
 {   
     public ArchiveConfig archiveConfig { get; set; }
     private StatementLoc statementInfo { get; set; } = new StatementLoc();
-    public Edit( StatementLoc statementinfo)
+    public string type0 { get; set; }
+    public Edit( StatementLoc statementinfo, string type)
     {
         InitializeComponent();
         statementInfo = statementinfo;
+        type0 = type;
         if (!File.Exists($"{ConstantVars.StatementsPath}/config.ini"))
         {
             MessageBox.Show("Please, sync with The Web.");
@@ -31,13 +33,51 @@ public partial class Edit : Window
     {
         try
         {
+            string path = "";
+            switch (type0)
+            {
+                case "n":
+                    path = ConstantVars.StatementsPath;
+                    break;
+                case "u":
+                    var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                    using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                    {
+                        con.Connect();
+                        if (con.DirectoryExists("unmoderated"))
+                        {
+                            path = "unmoderated";
+                        }
+                        else if (con.DirectoryExists("main"))
+                        {
+                            path = "unmoderated\\moderation\\unmoderated";
+                        }
+                    }
+                    break;
+                case "m":
+                    var cr2 = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                    using (var con = new FtpClient("31.31.196.95", cr2.Login, cr2.Password))
+                    {
+                        con.Connect();
+                        if (con.DirectoryExists("unmoderated"))
+                        {
+                            path = "moderated";
+                        }
+                        else if (con.DirectoryExists("main"))
+                        {
+                            path = "moderated\\moderation\\moderated";
+                        }
+                    }
+                    break;
+            }
+            
             foreach (var v in archiveConfig.tags.Split("$"))
             {
                 System.Windows.Controls.CheckBox checkBox = new System.Windows.Controls.CheckBox();
                 checkBox.Content = v;
                 tags.Children.Add(checkBox);
             }
-            ZipFile.ExtractToDirectory($"{ConstantVars.StatementsPath}/{statementInfo.Title}.statement", $"{statementInfo.Title}.edit", true);
+            ZipFile.ExtractToDirectory($"{path}/{statementInfo.Title}.statement", $"{statementInfo.Title}.edit", true);
             Statement draft = new ConfigurationBuilder<Statement>().UseIniFile($"{statementInfo.Title}.edit/{statementInfo.Title}.statementinfo").Build();
             sttitle.Text = draft.Title;
             streg.Text = draft.Regarding;

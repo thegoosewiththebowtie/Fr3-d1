@@ -52,7 +52,7 @@ public partial class NoAccess : Window
         switch (noaccess2)
         {
             case "editing":
-                Edit edit = new Edit(statementInfo);
+                Edit edit = new Edit(statementInfo, "n");
                 edit.Show();
                 this.Close();
                 break;

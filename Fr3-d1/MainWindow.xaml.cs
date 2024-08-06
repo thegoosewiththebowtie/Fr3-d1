@@ -4,6 +4,7 @@ using System.DirectoryServices;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
 using System.Windows;
@@ -38,6 +39,7 @@ namespace Fr3_d1
         public string TextBackgroundColor { get; set; }
         public string PrimaryColor { get; set; }
         public string Favs { get; set; }
+        public int ver { get; set; }
     }
     public interface ArchiveConfig
     {
@@ -524,8 +526,203 @@ namespace Fr3_d1
                 System.Windows.MessageBox.Show(exception.Message);
             }
         }
-        
-       
+        private async void Accept_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Unmoderated.IsSelected)
+            {
+                var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                {
+                    con.Connect();
+                    if (con.DirectoryExists("unmoderated"))
+                    {
+                        con.MoveFile(
+                            $"unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"denied/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                    }
+                    else if (con.DirectoryExists("main"))
+                    {
+                        con.DownloadFile("main.archive", "main/main.archive");
+                        ZipFile.ExtractToDirectory("main.archive", "main.archive.edit", true);
+                        File.Delete("main.archive");
+                        con.DownloadFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"moderation/unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        con.DeleteFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
+                        con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
+                        Directory.Delete("main.archive.edit", true);
+                    }
+                }
+            }
+            else if (Moderated.IsSelected)
+            {
+                var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                {
+                    con.Connect();
+                    if (con.DirectoryExists("unmoderated"))
+                    {
+                        con.MoveFile(
+                            $"unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"denied/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        return;
+                    }
+                    else if (con.DirectoryExists("main"))
+                    {
+                        con.DownloadFile("main.archive", "main/main.archive");
+                        ZipFile.ExtractToDirectory("main.archive", "main.archive.edit", true);
+                        File.Delete("main.archive");
+                        con.DownloadFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"moderation/moderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        con.DeleteFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
+                        con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
+                        Directory.Delete("main.archive.edit", true);
+                    }
+                }
+            }
+            var updatelink = "https://www.triangleonthewall.org/statements/main/main.archive";
+            File.Delete("main.archive");
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(new System.Uri(updatelink), HttpCompletionOption.ResponseHeadersRead);
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Error: " + response.StatusCode);
+                return;
+            }
+            var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+            var canReportProgress = totalBytes != -1;
+            var totalBytesRead = 0L;
+            var readChunkSize = 8192;
+            using (var contentStream = await response.Content.ReadAsStreamAsync())
+            using (var fileStream = new FileStream("main.archive", FileMode.Create, FileAccess.Write, FileShare.None, readChunkSize, true))
+            {
+                var buffer = new byte[readChunkSize];
+                int bytesRead;
+                while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                }
+            }
+            if (Directory.Exists(ConstantVars.StatementsPath))
+            {
+                Directory.Delete(ConstantVars.StatementsPath, true);
+            }
+            Directory.CreateDirectory(ConstantVars.StatementsPath);
+            ZipFile.ExtractToDirectory("main.archive", ConstantVars.StatementsPath, true );
+            DirectoryInfo stts = new DirectoryInfo(ConstantVars.StatementsPath);
+            File.Delete("main.archive");
+            ini();
+        }
+        private void Deny_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Unmoderated.IsSelected)
+            {
+                var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                {
+                    con.Connect();
+                    if (con.DirectoryExists("unmoderated"))
+                    {
+                        con.MoveFile(
+                            $"unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"denied/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                    }
+                    else if (con.DirectoryExists("main"))
+                    {
+                        con.MoveFile(
+                            $"moderation/unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"moderation/denied/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                    }
+                }
+            }
+            else if (Moderated.IsSelected)
+            {
+                var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                {
+                    con.Connect();
+                    if (con.DirectoryExists("unmoderated"))
+                    {
+                       return;
+                    }
+                    else if (con.DirectoryExists("main"))
+                    {
+                        con.MoveFile(
+                            $"moderation/moderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
+                            $"moderation/denied/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+
+                    }
+                }
+            }
+            ini();
+        }
+        private void Edit_OnClick(object sender, RoutedEventArgs e)
+        {
+            switch (IsAdmin)
+            {
+                case false:
+                    NoAccess noAccess = new NoAccess("editing", (StatementsListBox.SelectedItem as StatementLoc) );
+                    noAccess.ShowDialog();
+                    break;
+                case true:
+                    if ((sender as DataGrid).ItemsSource == StatementListRN)
+                    {
+                        PopUps.Edit edit = new Edit((StatementsListBox.SelectedItem as StatementLoc), "n");
+                        edit.Show();
+
+                    }
+                    else if ((sender as DataGrid).ItemsSource == UStatementListRN)
+                    {
+                        PopUps.Edit edit = new Edit((StatementsListBox.SelectedItem as StatementLoc), "u");
+                        edit.Show();
+
+                    }
+                    else if ((sender as DataGrid).ItemsSource == MStatementListRN)
+                    {
+                        PopUps.Edit edit = new Edit((StatementsListBox.SelectedItem as StatementLoc), "m");
+                        edit.Show();
+
+                    }
+                    break;
+            }
+        }
+        private void Del_OnClick(object sender, RoutedEventArgs e)
+        {
+            switch (IsAdmin)
+            {
+                case false:
+                    NoAccess noAccess = new NoAccess("deleting", (StatementsListBox.SelectedItem as StatementLoc) );
+                    noAccess.ShowDialog();
+                    break;
+                case true:
+                    var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
+                    using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                    {
+                        con.Connect();
+                        if (con.DirectoryExists("unmoderated"))
+                        {
+                            NoAccess noAccess2 = new NoAccess("deleting", (StatementsListBox.SelectedItem as StatementLoc) );
+                            noAccess2.ShowDialog();
+                        }
+                        else if (con.DirectoryExists("main"))
+                        {
+                            if (MessageBox.Show("Are you sure, Archivist‽‽‽ thats kinda dangerous af!", "Deleting", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                con.DownloadFile("main.archive", "main/main.archive");
+                                ZipFile.ExtractToDirectory("main.archive", "main.archive.edit", true);
+                                File.Delete("main.archive");
+                                File.Delete($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                                ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
+                                con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
+                                Directory.Delete("main.archive.edit", true);   
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
         //help
         private void Howtouse_OnClick(object sender, RoutedEventArgs e)
         {
@@ -619,7 +816,7 @@ namespace Fr3_d1
                 System.Windows.MessageBox.Show(exception.Message);
             }
         }
-        private void TreeViewItem_OnSelected(object sender, RoutedEventArgs e)
+        private void TreeViewItem_OnSelected(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -662,67 +859,81 @@ namespace Fr3_d1
         {
             StatementsListBox.ItemsSource = null;
             StatementsListBox.ItemsSource = UStatementListRN;
+            Del.IsEnabled = false;
+            switch (IsAdmin)
+            {
+                case false:
+                    Accept.IsEnabled = false;
+                    Deny.IsEnabled = false;
+                    break;
+                case true:
+                    Accept.IsEnabled = true;
+                    Deny.IsEnabled = true;
+                    break;
+            }
         }
         private void Moderated_OnSelected(object sender, RoutedEventArgs e)
         {
+            Del.IsEnabled = false;
             StatementsListBox.ItemsSource = null;
             StatementsListBox.ItemsSource = MStatementListRN;
+            switch (IsAdmin)
+            {
+                case false:
+                    Accept.IsEnabled = false;
+                    Deny.IsEnabled = false;
+                    break;
+                case true:
+                    Accept.IsEnabled = true;
+                    Deny.IsEnabled = true;
+                    break;
+            }
         }
         private void selected2(object sender, RoutedEventArgs e)
         {
             StatementsListBox.ItemsSource = null; 
             StatementsListBox.ItemsSource = StatementListRN;
+            Accept.IsEnabled = false;
+            Deny.IsEnabled = false;
+            Del.IsEnabled = true;
         }
 
-        private void Edit_OnClick(object sender, RoutedEventArgs e)
+        private async void Chk_OnClick(object sender, RoutedEventArgs e)
         {
-            switch (IsAdmin)
+            try
             {
-                case false:
-                    NoAccess noAccess = new NoAccess("editing", (StatementsListBox.SelectedItem as StatementLoc) );
-                    noAccess.ShowDialog();
-                    break;
-                case true:
-                    PopUps.Edit edit = new Edit((StatementsListBox.SelectedItem as StatementLoc));
-                    edit.Show();
-                    break;
-            }
-        }
 
-        private void Del_OnClick(object sender, RoutedEventArgs e)
-        {
-            switch (IsAdmin)
+            
+            using (WebClient client = new WebClient())
             {
-                case false:
-                    NoAccess noAccess = new NoAccess("deleting", (StatementsListBox.SelectedItem as StatementLoc) );
-                    noAccess.ShowDialog();
-                    break;
-                case true:
-                    var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
-                    using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
+                client.DownloadFile("https://triangleonthewall.org/fup.ini", "fup.ini");
+                var up = new ConfigurationBuilder<updch>().UseIniFile("fup.ini").Build();
+                if (up.latestver > 2)
+                {
+                    File.Delete("fup.ini");
+                    if (MessageBox.Show("Update?", "Updates found", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        con.Connect();
-                        if (con.DirectoryExists("unmoderated"))
-                        {
-                            NoAccess noAccess2 = new NoAccess("deleting", (StatementsListBox.SelectedItem as StatementLoc) );
-                            noAccess2.ShowDialog();
-                        }
-                        else if (con.DirectoryExists("main"))
-                        {
-                            if (MessageBox.Show("Are you sure, Archivist‽‽‽ thats kinda dangerous af!", "Deleting", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                            {
-                                con.DownloadFile("main.archive", "main/main.archive");
-                                ZipFile.ExtractToDirectory("main.archive", "main.archive.edit", true);
-                                File.Delete("main.archive");
-                                File.Delete($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.Statement");
-                                ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
-                                con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
-                                Directory.Delete("main.archive.edit", true);   
-                            }
-                        }
+                        client.DownloadFile("triangleonthewall.org/fsetup.exe", "fsetup.exe");
+                        Process.Start("fsetup.exe");
+                        Application.Current.Shutdown();
                     }
-                    break;
+                }
+                else
+                {
+                    File.Delete("fup.ini");
+                    MessageBox.Show("No updates");
+                }
+            }
+            }
+            catch (Exception exception)
+            {
+                System.Windows.MessageBox.Show(exception.Message);
             }
         }
     }
+}
+
+public interface updch
+{
+    public int latestver { get; set; }
 }
