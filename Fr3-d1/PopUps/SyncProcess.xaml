@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStyle="None"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" Icon="/Resources/icons/eye.ico"
         FontFamily="{StaticResource DefFont}"
         Background="{StaticResource Background}"
         Title="SyncProcess" Height="200" Width="300">

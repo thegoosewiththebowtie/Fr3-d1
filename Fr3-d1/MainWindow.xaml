@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Fr3_d1"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d" FontFamily="{StaticResource DefFont}"
-        ResizeMode="CanResize"
+        ResizeMode="CanResize" Icon="Resources/icons/eye.ico"
         Title="Fr3-d1" MinWidth="800" MinHeight="450" Height="450" Width="800" WindowStyle='None'>
     <Grid>
         <Grid.RowDefinitions>

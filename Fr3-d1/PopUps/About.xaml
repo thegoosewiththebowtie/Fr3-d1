@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Fr3_d1.PopUps"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Icon="/Resources/icons/eye.ico"
         ResizeMode="CanMinimize"
         WindowStyle="None"
         Background="{StaticResource Background}"

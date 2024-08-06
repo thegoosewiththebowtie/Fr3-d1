@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Fr3_d1.PopUps"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
+        WindowStyle="None" Icon="/Resources/icons/eye.ico"
         Background="{StaticResource Background}"
         FontFamily="{StaticResource DefFont}"
         MinWidth="800" MinHeight="450"
