@@ -4,8 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Fr3_d1.PopUps"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Background}"
         mc:Ignorable="d" FontFamily="{StaticResource DefFont}"
-        Title="No Access" Height="200" Width="300">
+        Title="No Access" Height="200" Width="350">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height='27'></RowDefinition>
@@ -36,7 +38,7 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row='1' ShowGridLines="True">
+        <Grid Grid.Row='1' ShowGridLines="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -45,14 +47,15 @@
                 <RowDefinition Height='3*'></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
+            <TextBox Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="1" Background="{StaticResource Foreground}" IsReadOnly="True"></TextBox>
             <Image Grid.Row="0" Grid.Column="0" Source="../Resources/icons/noaccess.ico" VerticalAlignment="Top" Margin="15"></Image>
-            <TextBlock TextWrapping="Wrap" Grid.Row="0" Margin="0, 15, 0,0" Grid.Column="1">
+            <TextBlock FontSize="14" TextWrapping="Wrap" Name="info" Grid.Row="0" Margin="5, 15, 5,0" Grid.Column="1">
                 You dont have an access to [thisaction]. If you believe that it is an error, please contact
                 The Head Archivist or The Archival Assistant. If you are just an Archive Worker you can send 
-                a suggestion to The Head Archivist.
+                a suggestion to The Head Archivist instead.
             </TextBlock>
-            <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="2" HorizontalAlignment="Left">Cancel</Button>
-            <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="2" HorizontalAlignment="Right">Make a suggestion</Button>
+            <Button Grid.Row="1" Name="cancel" FontSize="14" Width="120" Click="Cancel_OnClick" Grid.Column="2" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left">Cancel</Button>
+            <Button Grid.Row="1" Click="SuggestionButton_OnClick" Grid.Column="2" FontSize="14" Name="SuggestionButton" Width="120" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Right">Make a suggestion</Button>
         </Grid>
     </Grid>
 </Window>

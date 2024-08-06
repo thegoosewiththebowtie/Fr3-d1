@@ -178,7 +178,7 @@ public partial class SyncProcess : Window
             Directory.Delete(ConstantVars.StatementsPath, true);
         }
         Directory.CreateDirectory(ConstantVars.StatementsPath);
-        ZipFile.ExtractToDirectory("main.archive", ConstantVars.StatementsPath );
+        ZipFile.ExtractToDirectory("main.archive", ConstantVars.StatementsPath, true );
         DirectoryInfo stts = new DirectoryInfo(ConstantVars.StatementsPath);
         File.Delete("main.archive");
         }
@@ -197,15 +197,15 @@ public partial class SyncProcess : Window
         {
             progressBar.Value += 1;
             Task t = new Task(wait);
-            Thread.Sleep(rnd.Next(0,2000));
+            Thread.Sleep(rnd.Next(0,500));
         }
         else
         {
             MessageBox.Show("Synchronization is finished, please disconnect from The Web");
             progressBar.IsIndeterminate = true;
             ConnectButton.IsEnabled = true;
-            prg.Stop();
             upd0(sender, e);
+            prg.Stop();
         }
         }
         catch (Exception exception)

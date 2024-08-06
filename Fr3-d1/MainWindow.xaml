@@ -64,11 +64,11 @@
             <MenuItem Header='File'>
                 <MenuItem  Click='clrDat_Click' x:Name='clrDat' Header='Clear database'></MenuItem>
                 <MenuItem  Click="Sync_OnClick" x:Name="sync" Header='Sync with The Web'></MenuItem>
-                <MenuItem IsEnabled="False" Header='Sync with Fr3-d1&#x0a;PDA companion'></MenuItem>
+                <MenuItem IsEnabled="False" Header='Sync with Fr3-d1&#x0a;PDA companion&#x0a;[in development]'></MenuItem>
                 <Separator></Separator>
-                <MenuItem  Click="Login_OnClick" x:Name="login" Header='Log in'></MenuItem>
+                <MenuItem Click="Login_OnClick" x:Name="login" Header='Log in'></MenuItem>
                 <Separator></Separator>
-                <MenuItem Click="close_Click"  Header='Quit'></MenuItem>
+                <MenuItem Click="close_Click" Header='Quit'></MenuItem>
             </MenuItem>
             <MenuItem Header='Edit'>
                 <MenuItem Click="newStatement_OnClick" Name="newStatement"  Header='Make a statement'></MenuItem>
@@ -91,14 +91,17 @@
                 <MenuItem IsEnabled="False" Name="backgroundColor" Header='Background color'>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header='Statement'>
+            <MenuItem IsEnabled="False" Name="statementmenu" Header='Statement'>
                 <MenuItem Header='Add a tag'>
                     <MenuItem Click="MenuItem_OnClick" Header="Favorites"></MenuItem>
                 </MenuItem>
                 <Separator></Separator>
+                <MenuItem IsEnabled="False" Name="Accept" Header='Accept'></MenuItem>
+                <MenuItem IsEnabled="False" Name="Deny" Header='Deny'></MenuItem>
+                <Separator></Separator>
                 <MenuItem Click="Edit_OnClick" Name="Edit" Header='Edit'></MenuItem>
-                <MenuItem IsEnabled="False" Header='Add a supplemental'></MenuItem>
-                <MenuItem IsEnabled="False" Header='Delete'></MenuItem>
+                <MenuItem IsEnabled="False" Name="Suppl" Header='Add a supplemental'></MenuItem>
+                <MenuItem Click="Del_OnClick" Name="Del" Header='Delete'></MenuItem>
             </MenuItem>
             <MenuItem Header='Help'>
                 <MenuItem IsEnabled="False" Header='Support'></MenuItem>
@@ -121,6 +124,7 @@
                 FontFamily="{StaticResource DefFont}" FontStyle="Normal"
                 Margin='3' Background='{StaticResource Foreground}'>
                 <TreeViewItem
+                    Selected="selected2"
                     MouseLeftButtonDown="TreeViewItem_OnSelected">
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
