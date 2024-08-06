@@ -528,7 +528,9 @@ namespace Fr3_d1
         }
         private async void Accept_OnClick(object sender, RoutedEventArgs e)
         {
-            if (Unmoderated.IsSelected)
+            try
+            {
+                if (Unmoderated.IsSelected)
             {
                 var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
                 using (var con = new FtpClient("31.31.196.95", cr.Login, cr.Password))
@@ -547,7 +549,7 @@ namespace Fr3_d1
                         File.Delete("main.archive");
                         con.DownloadFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
                             $"moderation/unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
-                        con.DeleteFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        con.DeleteFile($"moderation/unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
                         ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
                         con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
                         Directory.Delete("main.archive.edit", true);
@@ -574,7 +576,7 @@ namespace Fr3_d1
                         File.Delete("main.archive");
                         con.DownloadFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement",
                             $"moderation/moderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
-                        con.DeleteFile($"main.archive.edit/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
+                        con.DeleteFile($"moderation/unmoderated/{(StatementsListBox.SelectedItem as StatementLoc).Title}.statement");
                         ZipFile.CreateFromDirectory("main.archive.edit", "main.archive");
                         con.UploadFile("main.archive", "main/main.archive", FtpRemoteExists.Overwrite);
                         Directory.Delete("main.archive.edit", true);
@@ -614,9 +616,17 @@ namespace Fr3_d1
             DirectoryInfo stts = new DirectoryInfo(ConstantVars.StatementsPath);
             File.Delete("main.archive");
             ini();
+            }
+            catch (Exception exception)
+            {
+                System.Windows.MessageBox.Show(exception.Message);
+            }
+            
         }
         private void Deny_OnClick(object sender, RoutedEventArgs e)
         {
+            try
+            {
             if (Unmoderated.IsSelected)
             {
                 var cr = new ConfigurationBuilder<Credentials>().UseIniFile("credentials").Build();
@@ -657,6 +667,11 @@ namespace Fr3_d1
                 }
             }
             ini();
+        }
+        catch (Exception exception)
+        {
+            System.Windows.MessageBox.Show(exception.Message);
+        }
         }
         private void Edit_OnClick(object sender, RoutedEventArgs e)
         {
